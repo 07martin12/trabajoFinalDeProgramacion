@@ -1,4 +1,4 @@
-# trabajoFinalDeProgramacion<p align="center">
+<p align="center">
   <strong>💱 Código de la Suerte 💱</strong>
 </p>
 
