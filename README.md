@@ -215,5 +215,3 @@ Cada vez que el jugador completa una ronda en cualquiera de los juegos, la aplic
 ## Autores
 Proyecto desarrollado por:
 - **Martín Lorenzi** – [alexmartin9c@gmail.com](mailto:alexmartin9c@gmail.com) 
-- **Juliana Pontacq** – [julianapon1979@gmail.com](mailto:julianapon1979@gmail.com) 
-- **Juan Ignacio Bayúgar** – [juanibayugar90@gmail.com](mailto:juanibayugar90@gmail.com)
