@@ -1,0 +1,3 @@
+2025-06-26 14:36:22 | Jugador: Juan | Juego: Tragamonedas_Joker | Apuesta: 950 | Ganancia: -950
+2025-06-26 14:36:35 | Jugador: Juan | Juego: Dados | Apuesta: 100 | Ganancia: 100
+2025-06-26 14:38:42 | Jugador: Juan | Juego: Tragamonedas_Hot | Apuesta: 900 | Ganancia: -900
