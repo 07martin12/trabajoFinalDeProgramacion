@@ -9,7 +9,6 @@ import { Ruleta } from './Ruleta';
 import { HistorialDePartidas } from './historialDePartidas';
 
 let casino = new Casino("codigo de la suerte", 1000000);
-
 let jugador1 = new Jugador ("Juan", 20000);
 
 const joker = new JokerJoker("Tragamonedas_Joker");
@@ -22,36 +21,37 @@ casino.setJuegos(hot);
 casino.setJuegos(dados);
 casino.setJuegos(ruleta);
 
-// El jugador elige el juego que desea jugar.
 elegirJuego(casino);
 
 function elegirJuego(casino: Casino): void {
-    let juego: string;
     let seguirJugando = true;
-    let juegoSeleccionado: number;
 
     console.log("Bienvenidos a " + casino.getNombre() + "...\n");
 
     while (seguirJugando) { 
         console.log("Juegos disponibles:");
         casino.imprimirJuegos();
-        juego = readlineSync.question("Elegir un juego (1/2/...): ");
-        juegoSeleccionado = parseInt(juego) - 1;
 
-        if (juegoSeleccionado >= 0 && juegoSeleccionado < casino.getJuegos().length) {
-            iniciarJuego(casino, juegoSeleccionado, jugador1);
-        } else {
-            console.log("Opción no válida. Por favor, eliga un número válido.\n");
+        const juego = readlineSync.question("Elegir un juego (1/2/...): ");
+        const juegoSeleccionado = parseInt(juego) - 1;
+
+        if (isNaN(juegoSeleccionado) || juegoSeleccionado < 0 || juegoSeleccionado >= casino.getJuegos().length) {
+            console.log("Opción no válida. Por favor, elija un número válido.\n");
             continue;
         }
 
-        const respuesta = readlineSync.questionInt("¿Desea jugar otro juego? (1 para cambiar de juego, 0 para salir del casino):\n");
-        if (respuesta === 0) {
-            seguirJugando = false;
-            console.log("Gracias por jugar. ¡Vuelva pronto!");
-        } else if (respuesta !== 1) {
-            console.log("Opción no válida. Por favor, elija 1 para cambiar de juego, 0 para salir del casino.\n");
-            continue;
+        iniciarJuego(casino, juegoSeleccionado, jugador1);
+
+        try {
+            const respuesta = readlineSync.questionInt("¿Desea jugar otro juego? (1 para cambiar de juego, 0 para salir del casino):\n");
+            if (respuesta === 0) {
+                seguirJugando = false;
+                console.log("Gracias por jugar. ¡Vuelva pronto!");
+            } else if (respuesta !== 1) {
+                console.log("Opción no válida. Por favor, elija 1 para cambiar de juego, 0 para salir del casino.\n");
+            }
+        } catch {
+            console.log("Entrada inválida. Debe ingresar un número (0 o 1).\n");
         }
     }
 }
@@ -65,63 +65,71 @@ function iniciarJuego(casino: Casino, juegoIndex: number, jugador1: Jugador): vo
     while (seguirJugando) {
         switch (juegoSeleccionado.getNombre()) {
             case "Dados":
-                console.log("El juego de " + juegoSeleccionado.getNombre() + " ha sido iniciado.\n");
+                console.log("El juego de Dados ha sido iniciado.\n");
 
-                console.log("Saldo actual del jugador: " + jugador1.getSaldo() + "\n");
-                // Guardamos saldo antes para cálculo de ganancia
+                if (jugador1.getSaldo() < 100) {
+                    console.log("No tienes saldo suficiente para jugar a los Dados.\n");
+                    return;
+                }
+
                 const saldoAntesDados = jugador1.getSaldo();
+                console.log("Saldo actual del jugador: " + saldoAntesDados + "\n");
 
-                dados.setCreditoActual(jugador1.getSaldo());
-                //la apuesta de dados es fija, se pasa la apuesta directamente al constructor
+                dados.setCreditoActual(saldoAntesDados);
                 dados.jugar(100);
-
-                console.log("Saldo actual del jugador: " + jugador1.getSaldo() + "\n");
-                // Actualizamos saldo del jugador con la diferencia
                 jugador1.setSaldo(dados.getCreditoActual());
 
-                // Calculamos ganancia total
                 const gananciaDados = jugador1.getSaldo() - saldoAntesDados;
 
                 HistorialDePartidas.registrarPartida(
                     jugador1.getNombreJugador(),
-                    juegoSeleccionado.getNombre(),
-                    100, gananciaDados
+                    "Dados",
+                    100,
+                    gananciaDados
                 );
                 break;
 
             case "Ruleta":
-                console.log("El juego de " + juegoSeleccionado.getNombre() + " ha sido iniciado.\n");
-                console.log("Saldo actual del jugador: " + jugador1.getSaldo() + "\n");
+                console.log("El juego de Ruleta ha sido iniciado.\n");
                 const saldoAntesRuleta = jugador1.getSaldo();
-                ruleta.setCreditoActual(jugador1.getSaldo());
+                console.log("Saldo actual del jugador: " + saldoAntesRuleta + "\n");
+
+                ruleta.setCreditoActual(saldoAntesRuleta);
                 ruleta.jugar();
                 jugador1.setSaldo(ruleta.getCreditoActual());
-                const gananciaRuleta = jugador1.getSaldo() - saldoAntesRuleta;
 
+                const gananciaRuleta = jugador1.getSaldo() - saldoAntesRuleta;
                 console.log("Saldo actual del jugador: " + jugador1.getSaldo() + "\n");
 
                 HistorialDePartidas.registrarPartida(
                     jugador1.getNombreJugador(),
-                    juegoSeleccionado.getNombre(),
-                    0, gananciaRuleta
+                    "Ruleta",
+                    0,
+                    gananciaRuleta
                 );
-
                 break;
 
             case "Tragamonedas_Joker":
-                console.log("El juego de " + juegoSeleccionado.getNombre() + " ha sido iniciado.\n");
+                console.log("El juego de Joker ha sido iniciado.\n");
+
                 if (jugador1.getSaldo() === 0) {
                     console.log("No tiene suficiente saldo para esta apuesta.\n");
                     return;
                 }
-                
+
                 console.log("Saldo actual del jugador: " + jugador1.getSaldo() + "\n");
                 joker.printApuestasDisponibles();
                 apuesta = joker.elegirApuesta(jugador1.getSaldo());
-                joker.imprimirCarretes();
+
+                if (apuesta > jugador1.getSaldo() || apuesta <= 0) {
+                    console.log("Apuesta inválida. Verifique su saldo y el monto.\n");
+                    return;
+                }
 
                 const saldoAntes = jugador1.getSaldo();
+                joker.imprimirCarretes();
                 joker.jugar(apuesta);
+
                 console.log("Resultado: " + joker.getResultado() + "\n");
 
                 if (joker.getResultado() !== 0) {
@@ -139,30 +147,33 @@ function iniciarJuego(casino: Casino, juegoIndex: number, jugador1: Jugador): vo
 
                 HistorialDePartidas.registrarPartida(
                     jugador1.getNombreJugador(),
-                    juegoSeleccionado.getNombre(),
+                    "Tragamonedas_Joker",
                     apuesta,
                     ganancia
                 );
-
-                apuesta = 0;
                 break;
 
             case "Tragamonedas_Hot":
-                console.log("El juego de " + juegoSeleccionado.getNombre() + " ha sido iniciado.");
-                
+                console.log("El juego de Hot ha sido iniciado.\n");
+
                 if (jugador1.getSaldo() === 0) {
-                    console.log("No tiene suficiente saldo para esta apuesta.");
+                    console.log("No tiene suficiente saldo para esta apuesta.\n");
                     return;
                 }
 
                 console.log("Saldo actual del jugador: " + jugador1.getSaldo() + "\n");
-
                 hot.printApuestasDisponibles();
                 apuesta = hot.elegirApuesta(jugador1.getSaldo());
+
+                if (apuesta > jugador1.getSaldo() || apuesta <= 0) {
+                    console.log("Apuesta inválida. Verifique su saldo y el monto.\n");
+                    return;
+                }
 
                 const saldoAntesHot = jugador1.getSaldo();
                 hot.imprimirCarretes();
                 hot.jugar(apuesta);
+
                 console.log("Resultado: " + hot.getResultado() + "\n");
 
                 if (hot.getResultado() !== 0) {
@@ -181,20 +192,23 @@ function iniciarJuego(casino: Casino, juegoIndex: number, jugador1: Jugador): vo
 
                 HistorialDePartidas.registrarPartida(
                     jugador1.getNombreJugador(),
-                    juegoSeleccionado.getNombre(),
+                    "Tragamonedas_Hot",
                     apuesta,
                     gananciaHot
                 );
-
                 break;
         }
 
-        const respuesta = readlineSync.questionInt("¿Desea seguir jugando? (1 para continuar, 0 para salir del juego):\n");
-        if (respuesta === 0) {
-            seguirJugando = false;
-            console.log("Gracias por jugar. ¡Vuelva pronto!");
-        } else if (respuesta !== 1) {
-            console.log("Opción no válida. Por favor, elija 1 para continuar jugando o 0 para salir.\n");
+        try {
+            const respuesta = readlineSync.questionInt("¿Desea seguir jugando? (1 para continuar, 0 para salir del juego):\n");
+            if (respuesta === 0) {
+                seguirJugando = false;
+                console.log("Gracias por jugar. ¡Vuelva pronto!");
+            } else if (respuesta !== 1) {
+                console.log("Opción no válida. Por favor, elija 1 para continuar o 0 para salir.\n");
+            }
+        } catch {
+            console.log("Entrada inválida. Debe ingresar un número (0 o 1).\n");
         }
     }
 }

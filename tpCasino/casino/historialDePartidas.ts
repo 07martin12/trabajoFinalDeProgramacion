@@ -28,11 +28,15 @@ export class HistorialDePartidas {
     public static registrarPartida(nombreJugador: string, nombreJuego: string, apuesta: number, ganancia: number): void {
         const instancia = HistorialDePartidas.getInstancia();
         const fechaHora = instancia.obtenerFechaHoraCompleta(new Date());
-
-        const linea = fechaHora + ' | Jugador: ' + nombreJugador + ' | Juego: ' + nombreJuego + ' | Apuesta: ' + apuesta + ' | Ganancia: ' + ganancia + '\n';
-
-        fs.appendFileSync(instancia.rutaArchivo, linea, 'utf8');
-    }
+    
+        const linea = `${fechaHora} | Jugador: ${nombreJugador} | Juego: ${nombreJuego} | Apuesta: ${apuesta} | Ganancia: ${ganancia}\n`;
+    
+        try {
+            fs.appendFileSync(instancia.rutaArchivo, linea, 'utf8');
+        } catch (error) {
+            console.error("Error al escribir en el historial de partidas:", error);
+        }
+    }    
 
     private obtenerFechaHoraCompleta(fecha: Date): string {
         const yyyy = fecha.getFullYear();

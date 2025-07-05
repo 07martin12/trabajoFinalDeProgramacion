@@ -91,12 +91,16 @@ export class JokerJoker extends Tragamonedas implements CalculadorDeGanancia {
     }
 
     public jugar(apuesta: number): void {
-        console.log("Iniciando juego...");
-        this.setCargarCarretes();
-        //si el metodo calcular ganancia retorno 0 entonces no se multiplica por la apuesta
-        const gananciaMultiplicador = this.calcularGanancia();
-        const ganancia = gananciaMultiplicador > 0 ? gananciaMultiplicador * apuesta : 0;
-        this.setResultado(ganancia);
+        try {
+            console.log("Iniciando juego...");
+            this.setCargarCarretes();
+            const gananciaMultiplicador = this.calcularGanancia();
+            const ganancia = gananciaMultiplicador > 0 ? gananciaMultiplicador * apuesta : 0;
+            this.setResultado(ganancia);
+        } catch (error) {
+            console.error("Error durante el juego:", error);
+            this.setResultado(0);
+        }
     }
 
     public calcularGanancia(): number {
@@ -191,47 +195,46 @@ export class JokerJoker extends Tragamonedas implements CalculadorDeGanancia {
     public elegirApuesta(saldoDisponible: number): number {
         let apuestaTotal = 0;
         let opcion = 1;
-
-        while (opcion != 0) {
-            // Pedir al usuario que ingrese un número como string
-            const entrada = readlineSync.question("Elija su apuesta:\n");
-            const eleccion = parseInt(entrada);
-
-            // Validar si la entrada es un número válido
-            if (isNaN(eleccion)) {
-                console.log("Entrada no válida. Debe ingresar un número.\n");
-                continue;
-            } 
-
-            // Verificar si la apuesta está disponible
-            if (this.apuestaExistente(eleccion)) {
-                console.log("Opción no válida. Elija una apuesta disponible.\n");
-            } else {
-                apuestaTotal += eleccion;
-                console.log("Ha apostado " + eleccion + " monedas.\n");
-                console.log("Apuesta total acumulada: " + apuestaTotal + " monedas.\n");
-
-                if (apuestaTotal > saldoDisponible) {
-                    console.log("No tiene suficiente saldo para esta apuesta acumulada, intente nuevamente.\n");
-                    apuestaTotal = 0;
+    
+        try {
+            while (opcion != 0) {
+                const entrada = readlineSync.question("Elija su apuesta:\n");
+                const eleccion = parseInt(entrada);
+    
+                if (isNaN(eleccion)) {
+                    console.log("Entrada no válida. Debe ingresar un número.\n");
                     continue;
                 }
-
-                // Preguntar si desea seguir apostando
-                const seguir = readlineSync.question("¿Desea seguir apostando? (1 para continuar apostando, 0 para salir de apuestas):\n");
-                opcion = parseInt(seguir);
-
-                // Validar si la opción ingresada es válida
-                if (isNaN(opcion) || (opcion !== 0 && opcion !== 1)) {
-                    console.log("Opción no válida. Por favor, elija 1 para seguir apostando o 0 para dejar de apostar.\n");
-                    opcion = 1; // Se asume que quiere seguir apostando
-                } else if (opcion === 0) {
-                    console.log("Ha decidido no seguir apostando. La apuesta total es de " + apuestaTotal + " monedas.\n");
-                    return apuestaTotal;
+    
+                if (this.apuestaExistente(eleccion)) {
+                    console.log("Opción no válida. Elija una apuesta disponible.\n");
+                } else {
+                    apuestaTotal += eleccion;
+                    console.log("Ha apostado " + eleccion + " monedas.\n");
+                    console.log("Apuesta total acumulada: " + apuestaTotal + " monedas.\n");
+    
+                    if (apuestaTotal > saldoDisponible) {
+                        console.log("No tiene suficiente saldo para esta apuesta acumulada, intente nuevamente.\n");
+                        apuestaTotal = 0;
+                        continue;
+                    }
+    
+                    const seguir = readlineSync.question("¿Desea seguir apostando? (1 para continuar apostando, 0 para salir de apuestas):\n");
+                    opcion = parseInt(seguir);
+    
+                    if (isNaN(opcion) || (opcion !== 0 && opcion !== 1)) {
+                        console.log("Opción no válida. Por favor, elija 1 para seguir apostando o 0 para dejar de apostar.\n");
+                        opcion = 1;
+                    } else if (opcion === 0) {
+                        console.log("Ha decidido no seguir apostando. La apuesta total es de " + apuestaTotal + " monedas.\n");
+                        return apuestaTotal;
+                    }
                 }
             }
+        } catch (error) {
+            console.error("Ocurrió un error durante la elección de apuesta:", error);
         }
-
+    
         return 0;
-    }
+    }    
 }
