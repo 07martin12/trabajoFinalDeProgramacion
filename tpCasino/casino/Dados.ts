@@ -9,12 +9,8 @@ export class Dados extends Juego implements CalculadorDeGanancia {
         [1, 2, 3, 4, 5, 6]
     ];
 
-    //resultados ganadores
-    private ganancia: number;
-
     public constructor(nombreDeJuego: string) {
         super(nombreDeJuego)
-        this.ganancia = 0;
     }
 
     public jugar(apuesta: number): void {
@@ -34,7 +30,7 @@ export class Dados extends Juego implements CalculadorDeGanancia {
             const gananciaMultiplicador = this.calcularGanancia(resultadoTotal);
             //La ganancia se multiplica por la apuesta del jugador solo si no es igual a 0, lo que indica que hubo combinaciones ganadoras.
             const ganancia = gananciaMultiplicador > 0 ? gananciaMultiplicador * apuesta : 0;
-            this.setGanancia(ganancia);
+            super.setCreditoActual(ganancia);
         } catch (error) {
             console.error("Error durante el juego:", error);
         }
@@ -71,12 +67,12 @@ export class Dados extends Juego implements CalculadorDeGanancia {
         return super.setNombre(nombre);
     }
 
-    public getGanancia(): number {
-        return this.ganancia;
+    public getCreditoActual(): number {
+        return super.getCreditoActual();
     }
 
-    public setGanancia(ganancia: number): void {
-        this.ganancia = ganancia;
+    public setCreditoActual(ganancia: number): void {
+        super.setCreditoActual (ganancia);
     }
 
     public calcularGanancia(pSuma: number): number {
