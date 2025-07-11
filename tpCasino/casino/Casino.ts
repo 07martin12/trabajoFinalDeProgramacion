@@ -37,11 +37,11 @@ export class Casino {
         this.saldo = saldo;
     }
 
-    public getPersona(): Jugador {
+    public getJugador(): Jugador {
         return this.jugador;
     }
 
-    public setPersona(jugador: Jugador): void {
+    public setJugador(jugador: Jugador): void {
         this.jugador = jugador;
     }
 
