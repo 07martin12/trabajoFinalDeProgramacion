@@ -35,11 +35,8 @@ export class Ruleta extends Juego implements CalculadorDeGanancia {
         2: ["rojo", "negro", "par", "impar", "1°_escala(1-18)", "2°_escala(19-36)"]
     };
 
-    private ganancia: number;
-
     public constructor(nombreDeJuego: string) {
         super(nombreDeJuego);
-        this.ganancia = 0;
         this.numeroApostado = 0;
     }
 
@@ -74,12 +71,12 @@ export class Ruleta extends Juego implements CalculadorDeGanancia {
         return super.setNombre(nombre);
     }
 
-    public getGanancia(): number {
-        return this.ganancia;
+    public getCreditoActual(): number {
+        return super.getCreditoActual();
     }
 
     public setGanancia(ganancia: number): void {
-        this.ganancia = ganancia;
+        super.setCreditoActual(ganancia);
     }
 
     // Método para imprimir las apuestas disponibles
