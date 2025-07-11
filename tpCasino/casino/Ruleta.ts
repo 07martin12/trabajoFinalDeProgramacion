@@ -4,7 +4,7 @@ import { Juego } from "./Juego";
 
 export class Ruleta extends Juego implements CalculadorDeGanancia {
     // Se crea una variable  para almacenar los números de la ruleta asociados a su color
-    private readonly ruleta = {
+    private static readonly ruleta = {
         rojo: [1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36],
         negro: [2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35],
         cero: [0]
@@ -50,9 +50,9 @@ export class Ruleta extends Juego implements CalculadorDeGanancia {
 
             //Se obtiene el color del numero
             let color = "verde";
-            if (this.ruleta.rojo.indexOf(resultadoRuleta) !== -1) {
+            if (Ruleta.ruleta.rojo.indexOf(resultadoRuleta) !== -1) {
                 color = "rojo";
-            } else if (this.ruleta.negro.indexOf(resultadoRuleta) !== -1) {
+            } else if (Ruleta.ruleta.negro.indexOf(resultadoRuleta) !== -1) {
                 color = "negro";
             }
 
@@ -165,22 +165,26 @@ export class Ruleta extends Juego implements CalculadorDeGanancia {
         this.numeroApostado = 0;
         return 0;
     }
-
     public calcularGanancia(resultado: number): number {
         let gananciaTotal = 0;
         const tiposDeApuesta = Object.keys(this.apuestas);
+        const listaDePagosKeys = Object.keys(Ruleta.listaDePagos);
+
         for (let i = 0; i < tiposDeApuesta.length; i++) {
             const tipoApuesta = tiposDeApuesta[i];
             const montoApostado = this.apuestas[tipoApuesta];
             if (montoApostado === 0) continue;
-            // Buscar multiplicador
+
             let multiplicador = 0;
-            for (const [key, apuestas] of Object.entries(Ruleta.listaDePagos)) {
+            for (let j = 0; j < listaDePagosKeys.length; j++) {
+                const key = listaDePagosKeys[j];
+                const apuestas = Ruleta.listaDePagos[key];
                 if (apuestas.indexOf(tipoApuesta) !== -1) {
                     multiplicador = parseInt(key);
                     break;
                 }
             }
+
             // Evaluar si gana
             let gano = false;
             if (tipoApuesta === "numero") {
@@ -188,11 +192,11 @@ export class Ruleta extends Juego implements CalculadorDeGanancia {
                     gano = true;
                 }
             } else if (tipoApuesta === "rojo") {
-                if (resultado !== 0 && this.ruleta.rojo.includes(resultado)) {
+                if (resultado !== 0 && Ruleta.ruleta.rojo.indexOf(resultado) !== -1) {
                     gano = true;
                 }
             } else if (tipoApuesta === "negro") {
-                if (resultado !== 0 && this.ruleta.negro.includes(resultado)) {
+                if (resultado !== 0 && Ruleta.ruleta.negro.indexOf(resultado) !== -1) {
                     gano = true;
                 }
             } else if (tipoApuesta === "par") {
@@ -236,11 +240,11 @@ export class Ruleta extends Juego implements CalculadorDeGanancia {
                     gano = true;
                 }
             }
+
             if (gano) {
                 gananciaTotal += montoApostado * multiplicador;
             }
         }
-
         // Reiniciar apuestas
         for (let i = 0; i < tiposDeApuesta.length; i++) {
             this.apuestas[tiposDeApuesta[i]] = 0;
@@ -252,17 +256,17 @@ export class Ruleta extends Juego implements CalculadorDeGanancia {
     public imprimirNumerosRuleta(): void {
         // Imprimir números rojos
         let resultadoRojo = "";
-        for (let i = 0; i < this.ruleta.rojo.length; i++) {
-            resultadoRojo += this.ruleta.rojo[i];
-            if (i !== this.ruleta.rojo.length - 1) {
+        for (let i = 0; i < Ruleta.ruleta.rojo.length; i++) {
+            resultadoRojo += Ruleta.ruleta.rojo[i];
+            if (i !== Ruleta.ruleta.rojo.length - 1) {
                 resultadoRojo += " | ";
             }
         }
         // Imprimir números negros
         let resultadoNegro = "";
-        for (let i = 0; i < this.ruleta.negro.length; i++) {
-            resultadoNegro += this.ruleta.negro[i];
-            if (i !== this.ruleta.negro.length - 1) {
+        for (let i = 0; i < Ruleta.ruleta.negro.length; i++) {
+            resultadoNegro += Ruleta.ruleta.negro[i];
+            if (i !== Ruleta.ruleta.negro.length - 1) {
                 resultadoNegro += " | ";
             }
         }
