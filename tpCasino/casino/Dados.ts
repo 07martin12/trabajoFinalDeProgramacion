@@ -4,7 +4,7 @@ import { CalculadorDeGanancia } from "./CalculadorDeGanancia";
 
 export class Dados extends Juego implements CalculadorDeGanancia {
     //se crea una variable inmutable para almacenar la cantidad de dados del juego
-    private readonly dados: number[][] = [
+    private static readonly dados: number[][] = [
         [1, 2, 3, 4, 5, 6],
         [1, 2, 3, 4, 5, 6]
     ];
@@ -21,11 +21,11 @@ export class Dados extends Juego implements CalculadorDeGanancia {
         try {
             let resultadoTotal = 0;
             // Se recorren todos los dados (cada array dentro de la matriz)
-            for (let i = 0; i < this.dados.length; i++) {
+            for (let i = 0; i < Dados.dados.length; i++) {
                 // Se genera un índice aleatorio para el dado actual
-                const indiceAleatorio = Math.floor(Math.random() * this.dados[i].length);
+                const indiceAleatorio = Math.floor(Math.random() * Dados.dados[i].length);
                 // Se obtiene el valor de la cara del dado
-                const caraDado = this.dados[i][indiceAleatorio];
+                const caraDado = Dados.dados[i][indiceAleatorio];
                 // Suma total de la cara de cada dado
                 resultadoTotal += caraDado;
                 console.log('Dado ' + (i + 1) + ': ' + caraDado);
