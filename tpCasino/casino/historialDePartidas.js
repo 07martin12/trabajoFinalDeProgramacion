@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.HistorialDePartidas = void 0;
 var fs = require("fs");
 var path = require("path");
@@ -20,11 +20,16 @@ var HistorialDePartidas = /** @class */ (function () {
         }
         return HistorialDePartidas.instancia;
     };
-    HistorialDePartidas.registrarPartida = function (nombreJugador, nombreJuego, apuesta, ganancia) {
+    HistorialDePartidas.registrarPartida = function (nombreJugador, nombreJuego, apuesta, ganancia, saldo) {
         var instancia = HistorialDePartidas.getInstancia();
         var fechaHora = instancia.obtenerFechaHoraCompleta(new Date());
-        var linea = fechaHora + ' | Jugador: ' + nombreJugador + ' | Juego: ' + nombreJuego + ' | Apuesta: ' + apuesta + ' | Ganancia: ' + ganancia + '\n';
-        fs.appendFileSync(instancia.rutaArchivo, linea, 'utf8');
+        var linea = fechaHora + " | Jugador: " + nombreJugador + " | Juego: " + nombreJuego + " | Apuesta: " + apuesta + " | Ganancia: " + ganancia + " | Saldo: " + saldo + "\n";
+        try {
+            fs.appendFileSync(instancia.rutaArchivo, linea, 'utf8');
+        }
+        catch (error) {
+            console.error("Error al escribir en el historial de partidas:", error);
+        }
     };
     HistorialDePartidas.prototype.obtenerFechaHoraCompleta = function (fecha) {
         var yyyy = fecha.getFullYear();

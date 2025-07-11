@@ -4,13 +4,14 @@ import * as readlineSync from 'readline-sync';
 
 export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
     private static readonly simboloEspecialSpin = "free-spin";
-
+    // Se crea un objeto estatico e inmutable que asocia un número (3, 4 o 5) con un arreglo de símbolos ganadores del tipo string.
     private static readonly combinacionesGanadoras: { [key: number]: string[] } = {
         5: ["scatter", "hot-hot", "777", "77", "7", "b5r", "bar", "champagne", "fichas"],
         4: ["scatter", "hot-hot", "777", "77", "7", "b5r", "bar", "champagne", "fichas"],
         3: ["scatter", "hot-hot", "777", "77", "7", "b5r", "bar", "champagne", "fichas"]
     };
-
+    // Se crea un objeto estatico e inmutable donde cada clave es el nombre de un símbolo y su valor es un arreglo numerico de pagos correspondientes a las apuestas ganadoras.
+    // Cada arreglo representa los pagos por 3, 4 o 5 símbolos iguales (en ese orden).
     private static readonly listaDePagos: { [key: string]: number[] } = {
         "scatter": [100, 30, 10],
         "hot-hot": [150, 40, 12],
@@ -24,6 +25,7 @@ export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
         "free-spin": [0, 0, 0]
     };
 
+    //Se crea un arreglo estatico e inmutable compuesto de valores numericos que se corresponden con las apuestas disponibles para el  usuario (fichas)
     private static readonly apuestasDisponibles: number[] = [
         25, 50, 75, 100, 125, 150, 175, 200, 225, 250,
         300, 350, 400, 450, 500,
@@ -35,7 +37,8 @@ export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
 
     public constructor(nombre: string) {
         super(nombre);
-        this.setCargarCarretes();
+        //Se cargan los carretes aleatoriamente por defecto antes de comenzar a jugar
+        this.cargarCarretes();
     }
 
     public getSimboloEspecial(): string {
@@ -76,10 +79,14 @@ export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
 
     public jugar(apuesta: number): void {
         try {
-            console.log("Iniciando juego HotHot...");
-            this.setCargarCarretes();
+            console.log("Iniciando juego...");
+             //Al apretar la palanca para jugar los carretes cambiaron sus valores aleatoriamente
+            this.cargarCarretes();
+            //Se analizan los simbolos de los carretes buscando combinaciones ganadoras y retornando su ganancia
             const gananciaMultiplicador = this.calcularGanancia();
+            //La ganancia se multiplica por la apuesta del jugador solo si no es igual a 0, lo que indica que hubo combinaciones ganadoras.
             const ganancia = gananciaMultiplicador > 0 ? gananciaMultiplicador * apuesta : 0;
+            //La ganancia se almacena en el resultado actual del jugador en esta partida
             this.setResultado(ganancia);
         } catch (error) {
             console.error("Error durante el juego:", error);
@@ -91,7 +98,7 @@ export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
         //se realiza una lectura especial evaluando si el jugador consiguo tiradas gratis  por conseguir una combinación de simbolos especiales
         let tiradasGratis = this.hayTiradaGratis();
         let ganancia = 0;
-
+        //se buscan combinaciones ganadoras en el array de carretes y se almacenan sus ganancias correspondientes
         ganancia += this.lecturaVertical();
         ganancia += this.lecturaHorizontal();
         ganancia += this.lecturaDiagonal();
@@ -99,7 +106,7 @@ export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
         //si hay tiradas gratis entonces el bucle vuelve a cargar los carretes de valores aleatorios y sigue evaluando las combinaciones ganadoras y almacenando la ganancia correspondiente
         if (tiradasGratis > 0)
             while (tiradasGratis > 0) {
-                this.setCargarCarretes();
+                this.cargarCarretes();
                 tiradasGratis = this.hayTiradaGratis();
                 ganancia += this.lecturaVertical();
                 ganancia += this.lecturaHorizontal();
@@ -112,31 +119,47 @@ export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
 
     public lecturaVertical(): number {
         let contador = 1;
-
+         //Se recorre la matriz fila por fila
+        //Se cuentan la cantidad de simbolos adyacentes que son iguales buscando aquellas combinaciones que cumplan con los requisitos para ser ganadoras
         for (let fila = 1; fila < this.carretes.length; fila++)
             if (this.carretes[fila][0] === this.carretes[0][0] && this.carretes[fila][0] !== HotHot.simboloEspecialSpin)
                 contador++;
-
+         //Si hay una combinacion de 3 simbolos iguales y adyacentes entonces el jugador gano la apuesta
         if (contador === 3)
+             //Se verifica en 'combinacionesGanadoras[contador]' que exista una clave para la posicion dada por el contador (3) 
+            //Si existe una clave asociada al contador actual entonces se recorre el array asociado a la clave buscando que el simbolo actual se encuentre presente
+            //Si se encuentra presente entonces el simbolo tiene combinaciones ganadoras para la longitud de la combinacion dada por el contador
             if (HotHot.combinacionesGanadoras[contador] &&
                 HotHot.combinacionesGanadoras[contador].indexOf(this.carretes[0][0]) !== -1)
+                //Si el simbolo tiene combinaciones ganadoras para la longitud actual entonces 
+                //this.carretes[0][0] es el nombre del simbolo actual que se relaciona con una de las claves del objeto de 'listaDePagos'
+                //contador -1 es la posicion del simbolo actual dentro del array que esta asociado a la clave del simbolo y contiene el valor pago de la combiancion ganadora
+                //se retorna el valor pago de la combinacion ganadora
                 return HotHot.listaDePagos[this.carretes[0][0]][contador - 1];
-
+        //Si no hay combinacion ganadora la ganancia es de 0
         return 0;
     }
 
     public lecturaHorizontal(): number {
         let contador = 1;
-
+         //Se recorre la matriz columna por columna
+        //Se cuentan la cantidad de simbolos adyacentes que son iguales buscando aquellas combinaciones que cumplan con los requisitos para ser ganadoras
         for (let columna = 1; columna < this.carretes[0].length; columna++)
             if (this.carretes[0][columna] === this.carretes[0][0] && this.carretes[0][columna] !== HotHot.simboloEspecialSpin)
                 contador++;
-
+         //Si hay una combinacion de 3 a 5 simbolos iguales y adyacentes entonces el jugador gano la apuesta
+        //Se verifica en 'combinacionesGanadoras[contador]' que exista una clave para la posicion dada por el contador (3) 
+        //Si existe una clave asociada al contador actual entonces se recorre el array asociado a la clave buscando que el simbolo actual se encuentre presente
+        //Si se encuentra presente entonces el simbolo tiene combinaciones ganadoras para la longitud de la combinacion dada por el contador
         if (contador === 3 &&
             HotHot.combinacionesGanadoras[contador] &&
             HotHot.combinacionesGanadoras[contador].indexOf(this.carretes[0][0]) !== -1)
+            //Si el simbolo tiene combinaciones ganadoras para la longitud actual entonces 
+            //this.carretes[0][0] es el nombre del simbolo actual que se relaciona con una de las claves del objeto de 'listaDePagos'
+            //contador -1 es la posicion del simbolo actual dentro del array que esta asociado a la clave del simbolo y contiene el valor pago de la combiancion ganadora
+            //se retorna el valor pago de la combinacion ganadora
             return HotHot.listaDePagos[this.carretes[0][0]][contador - 1];
-
+        //Si no hay combinacion ganadora la ganancia es de 0
         return 0;
     }
 
@@ -144,7 +167,8 @@ export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
         let contador = 1;
         let fila = 1;
         let columna = 1;
-
+         //Se recorre la primer diagonal de la matriz 
+        //Se cuentan la cantidad de simbolos adyacentes que son iguales buscando aquellas combinaciones que cumplan con los requisitos para ser ganadoras
         while (fila < this.carretes.length) {
             if (this.carretes[fila][columna] === this.carretes[0][0] && this.carretes[fila][columna] !== HotHot.simboloEspecialSpin)
                 contador++;
@@ -152,15 +176,23 @@ export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
             fila++;
             columna++;
         }
-
+        //Si hay una combinacion de 3 simbolos iguales y adyacentes entonces el jugador gano la apuesta
+         //Se verifica en 'combinacionesGanadoras[contador]' que exista una clave para la posicion dada por el contador (3) 
+         //Si existe una clave asociada al contador actual entonces se recorre el array asociado a la clave buscando que el simbolo actual se encuentre presente
+        //Si se encuentra presente entonces el simbolo tiene combinaciones ganadoras para la longitud de la combinacion dada por el contador
         if (contador === 3 && HotHot.combinacionesGanadoras[contador] &&
             HotHot.combinacionesGanadoras[contador].indexOf(this.carretes[0][0]) !== -1)
+            //Si el simbolo tiene combinaciones ganadoras para la longitud actual entonces 
+            //this.carretes[0][0] es el nombre del simbolo actual que se relaciona con una de las claves del objeto de 'listaDePagos'
+            //contador -1 es la posicion del simbolo actual dentro del array que esta asociado a la clave del simbolo y contiene el valor pago de la combiancion ganadora
+            //se retorna el valor pago de la combinacion ganadora
             return HotHot.listaDePagos[this.carretes[0][0]][contador - 1];
-
+        //Si no hay combinacion ganadora la ganancia es de 0
         return 0;
     }
 
-    public setCargarCarretes(): void {
+    //se cargan los carretes aleatoriamente tomando las claves del objeto listaDePagos como un arreglo con los nombres de todos los simbolos disponibles
+    public cargarCarretes(): void {
         const filas = 3;
         const columnas = 5;
         const simbolos = Object.keys(HotHot.listaDePagos);
@@ -177,23 +209,23 @@ export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
 
     public hayTiradaGratis(): number {
         let contador = 0;
-
+        //Si el primer simbolo del carrete no es un simbolo especial entonces no hay tirada gratis
         if (this.carretes[0][0] != HotHot.simboloEspecialSpin)
             return 0;
 
         let tiradasGratis = 0;
-
+        //Se realiza una lectura vertical para buscar simbolos especiales
         for (let fila = 1; fila < this.carretes.length; fila++)
             if (this.carretes[fila][0] === HotHot.simboloEspecialSpin)
                 contador++;
-
+        //Se realiza una lectura horizontal para buscar simbolos especiales
         for (let columna = 1; columna < this.carretes[0].length; columna++)
             if (this.carretes[0][columna] === HotHot.simboloEspecialSpin)
                 contador++;
 
         let fila = 1;
         let columna = 1;
-
+        //Se realiza una lectura en diagonal para buscar simbolos especiales
         while (fila < this.carretes.length) {
             if (this.carretes[fila][columna] === HotHot.simboloEspecialSpin)
                 contador++;
@@ -201,7 +233,7 @@ export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
             fila++;
             columna++;
         }
-
+        //Si se contaron 3 o mas simbolos adyacentes y del mismo tipo entonces el jugador obtiene 3 tiradas gratis
         if (contador >= 3)
             tiradasGratis = 3;
 
@@ -233,13 +265,9 @@ export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
     }
 
     public apuestaExistente(eleccion: number): boolean {
-        if (HotHot.apuestasDisponibles.indexOf(eleccion) != -1)
-            return false;
-
-        return true;
+        // Se verifica si el monto ingresado por el usuario está presente en la lista de apuestas disponibles
+        return HotHot.apuestasDisponibles.indexOf(eleccion) !== -1;
     }
-
-    
 
     public elegirApuesta(saldoDisponible: number): number {
         let apuestaTotal = 0;
@@ -255,7 +283,7 @@ export class HotHot extends Tragamonedas implements CalculadorDeGanancia {
                     continue;
                 }
     
-                if (this.apuestaExistente(eleccion)) {
+                if (!this.apuestaExistente(eleccion)) {
                     console.log("Opción no válida. Elija una apuesta disponible.\n");
                 } else {
                     apuestaTotal += eleccion;

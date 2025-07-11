@@ -14,100 +14,105 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Dados = void 0;
-var Juego_1 = require("./Juego"); //importo la clase base juego.
+var readlineSync = require("readline-sync");
+var Juego_1 = require("./Juego");
 var Dados = /** @class */ (function (_super) {
     __extends(Dados, _super);
-    function Dados(pApuesta, pCreditoInicial, pCantidadDados, pNombreDeJuego, pCreditoActual) {
-        var _this = _super.call(this, pNombreDeJuego, pCreditoActual) || this;
-        _this.apuesta = 0;
-        _this.cantidadDados = pCantidadDados = 2,
-            _this.apuesta = pApuesta;
-        _this.nuevoSaldo = 0;
+    function Dados(nombreDeJuego) {
+        var _this = _super.call(this, nombreDeJuego) || this;
+        //se crea una variable inmutable para almacenar la cantidad de dados del juego
+        _this.dados = [
+            [1, 2, 3, 4, 5, 6],
+            [1, 2, 3, 4, 5, 6]
+        ];
+        _this.ganancia = 0;
         return _this;
     }
-    //reescribo de credito actual
-    Dados.prototype.setCreditoActual = function (pCreditoActual) {
-        this.nuevoSaldo = pCreditoActual;
-    };
-    Dados.prototype.getCreditoActual = function () {
-        return this.nuevoSaldo;
-    };
-    //CREAMOS SET Y GET DE APUESTA
-    Dados.prototype.setApuesta = function (pApuesta) {
-        this.apuesta = pApuesta;
-    };
-    Dados.prototype.getApuesta = function () {
-        return this.apuesta;
-    };
-    ;
-    //metodo get y set de cantidad de dados.
-    Dados.prototype.setCantidadDados = function (pCantidadDados) {
-        this.cantidadDados = pCantidadDados;
-    };
-    Dados.prototype.getCantidadDados = function () {
-        return this.cantidadDados;
-    };
-    //------------------------------------------------------------------------------------------------
-    Dados.prototype.calcularGanancia = function (pSuma, pApuesta) {
-        if (pSuma === 7) {
-            console.log("¡Sacaste 7! Ganaste el doble de tu apuesta.");
-            this.setCreditoActual(this.getCreditoActual() + Math.floor(pApuesta * 2));
+    Dados.prototype.jugar = function (apuesta) {
+        try {
+            var resultadoTotal = 0;
+            // Se recorren todos los dados (cada array dentro de la matriz)
+            for (var i = 0; i < this.dados.length; i++) {
+                // Se genera un índice aleatorio para el dado actual
+                var indiceAleatorio = Math.floor(Math.random() * this.dados[i].length);
+                // Se obtiene el valor de la cara del dado
+                var caraDado = this.dados[i][indiceAleatorio];
+                // Suma total de la cara de cada dado
+                resultadoTotal += caraDado;
+                console.log('Dado ' + (i + 1) + ': ' + caraDado);
+            }
+            // Se calcula la ganancia con la suma total de los dados
+            var gananciaMultiplicador = this.calcularGanancia(resultadoTotal);
+            //La ganancia se multiplica por la apuesta del jugador solo si no es igual a 0, lo que indica que hubo combinaciones ganadoras.
+            var ganancia = gananciaMultiplicador > 0 ? gananciaMultiplicador * apuesta : 0;
+            this.setGanancia(ganancia);
         }
-        else if (pSuma === 11) {
-            console.log("¡Sacaste 11! Ganaste el triple de tu apuesta.");
-            this.setCreditoActual(this.getCreditoActual() + Math.floor(pApuesta * 3));
+        catch (error) {
+            console.error("Error durante el juego:", error);
         }
-        else if (pSuma === 2) {
-            //PRUEBA
-            console.log("¡Sacaste 2! Ganaste cinco veces tu apuesta.");
-            this.setCreditoActual(this.getCreditoActual() + Math.floor(pApuesta * 5));
-        }
-        else if ([3, 4, 5, 6, 8, 9, 10, 12].indexOf(pSuma) !== -1) { //arreglo con los numeros perdedores.
-            console.log("Sacaste ".concat(pSuma, ". Perdiste toda tu apuesta."));
-        }
-        return this.getCreditoActual();
     };
-    ;
-    //---------------------------------------------------------------------------------------------------------------
-    Dados.prototype.jugar = function (pApuesta) {
-        console.log("Juego creado con cr\u00E9dito inicial: ".concat(this.getCreditoActual()));
-        pApuesta = Math.floor(pApuesta); // Aseguramos que siempre sea entero
-        this.setApuesta(pApuesta); // sette la apuesta.
-        console.log("Apuesta inicial: ".concat(pApuesta));
-        if (pApuesta > this.getCreditoActual() || this.getCreditoActual() <= 0) { //si apuesto más que mi credito no tengo suficiente saldo para jugar
-            console.log("No tienes suficiente crédito para apostar.");
-            return;
+    Dados.prototype.elegirApuesta = function () {
+        try {
+            var apuesta = readlineSync.question("Elija su apuesta, la apuesta minima es de 500 y la máxima es de 50.000:\n");
+            var apuestaNumerica = parseInt(apuesta);
+            if (isNaN(apuestaNumerica)) {
+                console.log("Entrada no válida. Debe ingresar un número.");
+                return this.elegirApuesta(); // Llamamos nuevamente al método si la entrada no es un número
+            }
+            if (apuestaNumerica < 500 || apuestaNumerica > 50000) {
+                console.log("La apuesta debe ser mayor a 500 y menor a 50,000.");
+                return this.elegirApuesta(); // Volver a pedir la apuesta si no está en el rango
+            }
+            console.log("Apuesta seleccionada: " + apuestaNumerica + " monedas.");
+            return apuestaNumerica;
         }
-        this.setCreditoActual((this.getCreditoActual() - pApuesta)); //restamos la apuesta al credito actual.
-        console.log("Cr\u00E9dito despu\u00E9s de apostar: ".concat(this.getCreditoActual())); //actualiza el credito actual.
-        var resultados = []; //creo un arreglo para almacenar los resultados de los dados, el cual lo inicializo vacio.
-        var suma = 0; // inicializo la suma de los valores de los dados en cero.
-        for (var i = 0; i < this.getCantidadDados(); i++) {
-            var dado = Math.floor(Math.random() * 6) + 1;
-            resultados.push(dado); //agrego al arreglo resultado el dado que sale en la tirada.
-            suma += dado; //suma los dos dados.
+        catch (error) {
+            console.error("Ocurrió un error durante la elección de la apuesta:", error);
+            return 0; // En caso de error, retorna 0
         }
-        console.log("Resultados de los dados: ".concat(resultados, " (Suma: ").concat(suma, ")")); //muestra el resultado de las dos variables (linea 44 y 45)
-        this.calcularGanancia(suma, this.getApuesta());
-        // if (suma === 7) {
-        //     console.log("¡Sacaste 7! Ganaste el doble de tu apuesta.");
-        //     this.setCreditoActual (this.getCreditoActual()+ Math.floor(pApuesta * 2));
-        // } else if (suma === 11) {
-        //     console.log("¡Sacaste 11! Ganaste el triple de tu apuesta.");
-        //     this.setCreditoActual (this.getCreditoActual() +Math.floor(pApuesta * 3));
-        // } else if (suma === 2) {
-        //     console.log("¡Sacaste 2! Ganaste cinco veces tu apuesta.");
-        //     this.setCreditoActual (this.getCreditoActual() + Math.floor(pApuesta * 5));
-        // }
-        //  else if ([3, 4, 5, 6, 8, 9, 10, 12].includes(suma)) { //arreglo con los numeros perdedores.
-        //     console.log(`Sacaste ${suma}. Perdiste toda tu apuesta.`);
-        // }
-        console.log("Cr\u00E9dito final despu\u00E9s de la partida: ".concat(this.getCreditoActual()));
+    };
+    Dados.prototype.getNombre = function () {
+        return _super.prototype.getNombre.call(this);
+    };
+    Dados.prototype.setNombre = function (nombre) {
+        return _super.prototype.setNombre.call(this, nombre);
+    };
+    Dados.prototype.getGanancia = function () {
+        return this.ganancia;
+    };
+    Dados.prototype.setGanancia = function (ganancia) {
+        this.ganancia = ganancia;
+    };
+    Dados.prototype.calcularGanancia = function (pSuma) {
+        // Verificar si el número es primo
+        var esPrimo = true;
+        if (pSuma <= 1) {
+            esPrimo = false;
+        }
+        else {
+            for (var i = 2; i <= Math.sqrt(pSuma); i++) {
+                if (pSuma % i === 0) {
+                    esPrimo = false;
+                    break;
+                }
+            }
+        }
+        // Calcular el multiplicador
+        if (pSuma % 2 === 0) { // Número par
+            console.log("Sacaste un numero par: " + pSuma + ". Ganaste el doble de tu apuesta.");
+            return 2;
+        }
+        else if (esPrimo) { // Número primo
+            console.log("Sacaste un numero primo:" + pSuma + ". Ganaste cinco veces tu apuesta.");
+            return 5;
+        }
+        else { // Número impar 
+            console.log("Sacaste un numero impar:" + pSuma + ". Ganaste el triple de tu apuesta.");
+            return 3;
+        }
     };
     return Dados;
 }(Juego_1.Juego));
 exports.Dados = Dados;
-//const juegoDeDados = new Dados(10000, 2, 1, "h", 20000); //hay que inicializar los parametros desde el inicio. ??
-//juegoDeDados.jugar(1000); //lo que quiero que sea la apuesta

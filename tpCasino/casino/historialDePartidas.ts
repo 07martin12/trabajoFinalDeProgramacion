@@ -25,12 +25,11 @@ export class HistorialDePartidas {
         return HistorialDePartidas.instancia;
     }
 
-    public static registrarPartida(nombreJugador: string, nombreJuego: string, apuesta: number, ganancia: number): void {
+    public static registrarPartida(nombreJugador: string, nombreJuego: string, apuesta: number, ganancia: number, saldo: number): void {
         const instancia = HistorialDePartidas.getInstancia();
         const fechaHora = instancia.obtenerFechaHoraCompleta(new Date());
-    
-        const linea = `${fechaHora} | Jugador: ${nombreJugador} | Juego: ${nombreJuego} | Apuesta: ${apuesta} | Ganancia: ${ganancia}\n`;
-    
+        const linea = fechaHora + " | Jugador: " + nombreJugador + " | Juego: " + nombreJuego + " | Apuesta: " + apuesta + " | Ganancia: " + ganancia + " | Saldo: " + saldo + "\n";
+
         try {
             fs.appendFileSync(instancia.rutaArchivo, linea, 'utf8');
         } catch (error) {

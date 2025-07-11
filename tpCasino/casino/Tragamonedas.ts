@@ -10,7 +10,7 @@ export abstract class Tragamonedas extends Juego {
     public abstract getApuestasDisponibles(): number[];
     public abstract getCombinacionesGanadoras (): {[key: number]: string []};
     public abstract getCarretes(): string [][];
-    public abstract setCargarCarretes (): void;
+    public abstract cargarCarretes (): void;
 
     public abstract lecturaVertical (): number;
     public abstract lecturaHorizontal (): number;
@@ -31,6 +31,7 @@ export abstract class Tragamonedas extends Juego {
         return super.getCreditoActual ();
     }
 
+    //Se actualiza el resultado de la partida actual del jugador una vez finalizada
     public setResultado (gananciaTotal: number): void {
         super.setCreditoActual (gananciaTotal);
     }

@@ -14,7 +14,7 @@ var __extends = (this && this.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Tragamonedas = void 0;
 var Juego_1 = require("./Juego");
 var Tragamonedas = /** @class */ (function (_super) {
@@ -31,6 +31,7 @@ var Tragamonedas = /** @class */ (function (_super) {
     Tragamonedas.prototype.getResultado = function () {
         return _super.prototype.getCreditoActual.call(this);
     };
+    //Se actualiza el resultado de la partida actual del jugador una vez finalizada
     Tragamonedas.prototype.setResultado = function (gananciaTotal) {
         _super.prototype.setCreditoActual.call(this, gananciaTotal);
     };

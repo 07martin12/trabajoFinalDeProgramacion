@@ -1,6 +1,8 @@
-2025-06-26 14:36:22 | Jugador: Juan | Juego: Tragamonedas_Joker | Apuesta: 950 | Ganancia: -950
-2025-06-26 14:36:35 | Jugador: Juan | Juego: Dados | Apuesta: 100 | Ganancia: 100
-2025-06-26 14:38:42 | Jugador: Juan | Juego: Tragamonedas_Hot | Apuesta: 900 | Ganancia: -900
-2025-07-02 21:26:53 | Jugador: Juan | Juego: Tragamonedas_Joker | Apuesta: 850 | Ganancia: -850
-2025-07-02 21:29:33 | Jugador: Juan | Juego: Tragamonedas_Hot | Apuesta: 1025 | Ganancia: -1025
-2025-07-05 14:56:55 | Jugador: Juan | Juego: Tragamonedas_Joker | Apuesta: 850 | Ganancia: -850
+2025-07-10 23:46:31 | Jugador: Martin | Juego: Dados | Apuesta: 500 | Ganancia: 1000 | Saldo: 21150
+2025-07-11 00:10:39 | Jugador: Martin | Juego: Tragamonedas_Hot | Apuesta: 25 | Ganancia: -25 | Saldo: 19975
+2025-07-11 00:11:07 | Jugador: Martin | Juego: Ruleta | Apuesta: 1000 | Ganancia: -1000 | Saldo: 18975
+2025-07-11 00:12:31 | Jugador: Martin | Juego: Tragamonedas_Hot | Apuesta: 300 | Ganancia: -300 | Saldo: 19700
+2025-07-11 00:13:05 | Jugador: Martin | Juego: Ruleta | Apuesta: 5000 | Ganancia: 10000 | Saldo: 29700
+2025-07-11 00:34:18 | Jugador: Martin | Juego: Dados | Apuesta: 500 | Ganancia: 1000 | Saldo: 21000
+2025-07-11 00:39:24 | Jugador: Martin | Juego: Ruleta | Apuesta: 600 | Ganancia: -600 | Saldo: 19900
+2025-07-11 00:42:35 | Jugador: Martin | Juego: Ruleta | Apuesta: 500 | Ganancia: -500 | Saldo: 19500

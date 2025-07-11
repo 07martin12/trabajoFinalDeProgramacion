@@ -1,5 +1,5 @@
 "use strict";
-exports.__esModule = true;
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.Casino = void 0;
 var Casino = /** @class */ (function () {
     function Casino(nombre, saldo) {
@@ -35,6 +35,20 @@ var Casino = /** @class */ (function () {
         //se publica una lista enumerada de juegos disponibles para el jugador
         for (var i = 0; i < this.juegos.length; i++) {
             console.log((i + 1) + ") " + this.juegos[i].getNombre());
+        }
+    };
+    Casino.prototype.actualizarSaldo = function (jugador, casino, apuesta, ganancia) {
+        if (ganancia > 0) {
+            // Si el jugador gana
+            jugador.setSaldo(jugador.getSaldo() + ganancia);
+            casino.setSaldo(casino.getSaldo() - ganancia); // El casino pierde la cantidad ganada por el jugador
+            console.log("¡Felicidades! Ha ganado " + ganancia + " pesos. Tu saldo es ahora " + jugador.getSaldo() + " pesos.");
+        }
+        else {
+            // Si el jugador pierde
+            jugador.setSaldo(jugador.getSaldo() - apuesta);
+            casino.setSaldo(casino.getSaldo() + apuesta); // El casino gana lo apostado por el jugador
+            console.log("Has perdido. El casino ha ganado " + apuesta + " pesos. Tu saldo es ahora " + jugador.getSaldo() + " pesos.");
         }
     };
     return Casino;

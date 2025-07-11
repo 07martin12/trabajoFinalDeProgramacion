@@ -105,32 +105,58 @@ Hot Hot es una tragamonedas de 5 carretes y 3 filas que premia combinaciones de 
 </div>
 
 ### Dados
-
 <div align="justify">
+  El juego consiste en lanzar dos dados. El valor total obtenido determina la ganancia del jugador según las siguientes reglas:
 
-El juego cuenta con dos dados, y el resultado determinará si el jugador gana o pierde.  
-- Si obtiene un 7, gana el doble de lo apostado.  
-- Si obtiene un 11, gana el triple.  
-- Si obtiene un 2, gana 5 veces más de su apuesta.  
-- Cualquier otro número no genera ganancia.  
-
+  - Si el resultado es un número **par**, el jugador gana **el doble** de su apuesta.
+  - Si el resultado es un número **primo** (como 3, 5, 7, 11), el jugador gana **cinco veces** su apuesta.
+  - Si el resultado es un número **impar no primo**, el jugador gana **el triple** de su apuesta.
+  - En todos los casos, la ganancia se multiplica por el monto apostado.
 </div>
-
 ---
 
 ### Ruleta
 
 <div align="justify">
 
-El juego cuenta con un paño de doce números, (del 0 al 11), distribuidos en tres colores: celeste, blanco y rojo. También se consideran las opciones de par e impar.
+La ruleta es un juego donde el jugador puede apostar a diferentes opciones basadas en el resultado del giro de la ruleta (números del 0 al 36) y el color que salga.
 
-- Si el número que sale coincide con el número apostado, el jugador recibe 800% de lo apostado.  
-- Si acierta el color, gana el 200%.  
-- Si acierta par o impar, gana el 100%.  
-
-El jugador puede retirarse o seguir apostando después de la tercera ronda. Si el saldo llega a 0, queda inhabilitado.
+El paño está dividido en números asociados a colores (rojo, negro y verde para el 0), además de categorías como par/impar, docenas, filas y escalas.
 
 </div>
+
+#### Tipos de Apuestas Disponibles
+
+| Opción                | Descripción                                  |
+|-----------------------|----------------------------------------------|
+| Número                | Apostar a un número específico (0-36).      |
+| Rojo                  | Apostar a que el número sea rojo.            |
+| Negro                 | Apostar a que el número sea negro.           |
+| Par                   | Apostar a que el número sea par (excluye 0).|
+| Impar                 | Apostar a que el número sea impar (excluye 0).|
+| 1° Docena             | Apostar a que salga un número entre 1 y 12. |
+| 2° Docena             | Apostar a que salga un número entre 13 y 24.|
+| 3° Docena             | Apostar a que salga un número entre 25 y 36.|
+| 1° Fila               | Apostar a que el número pertenece a la fila 1 (números con residuo 1 módulo 3).|
+| 2° Fila               | Apostar a que el número pertenece a la fila 2 (residuo 2 módulo 3).|
+| 3° Fila               | Apostar a que el número pertenece a la fila 3 (múltiplos de 3, excluyendo 0).|
+| 1° Escala (1-18)      | Apostar a que el número esté entre 1 y 18.  |
+| 2° Escala (19-36)     | Apostar a que el número esté entre 19 y 36. |
+
+#### Tabla de Pagos y Multiplicadores
+
+| Tipo de Apuesta         | Multiplicador (x) | Explicación                                           |
+|------------------------|-------------------|------------------------------------------------------|
+| Número (acierto exacto) | 36                | Ganas 36 veces lo apostado si el número es exacto.  |
+| Docenas y Filas        | 3                 | Ganas 3 veces lo apostado si el número está en la docena o fila elegida. |
+| Colores, Par/Impar, Escalas | 2               | Ganas 2 veces lo apostado si aciertas en color, par/impar o escala. |
+
+#### Ejemplos de ganancias
+
+- Si apuestas $500 al número 7 y sale 7, ganas $18,000 (500 × 36).  
+- Si apuestas $1000 al color rojo y sale un número rojo, ganas $2000 (1000 × 2).  
+- Si apuestas $2000 a la 1° docena y sale un número entre 1 y 12, ganas $6000 (2000 × 3).  
+
 
 ---
 
