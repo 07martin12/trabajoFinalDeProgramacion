@@ -2,9 +2,9 @@ export class Juego {
     private nombreDeJuego: string;
     private creditoActual: number;
 
-    public constructor(nombre: string, creditoActual?: number) {
+    public constructor(nombre: string) {
         this.nombreDeJuego = nombre;
-        this.creditoActual = creditoActual !== undefined ? creditoActual : 0;
+        this.creditoActual =  0;
     }
 
     public getNombre(): string {
@@ -20,6 +20,6 @@ export class Juego {
     }
 
     public setCreditoActual(ganancia: number): void {
-        this.creditoActual += ganancia;
+        this.creditoActual = ganancia;
     }
 }
