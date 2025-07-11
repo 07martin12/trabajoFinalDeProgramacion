@@ -144,13 +144,13 @@ function iniciarJuego(casino: Casino, juegoIndex: number, jugador1: Jugador): vo
                 //Se da inicio al juego de dados y se evaluan los resultados
                 dados.jugar(apuesta);
                 //Se imprime el resultado de la apuesta realizada.
-                console.log("Apuesta realizada = " + apuesta + "\n" + "Ganancias obtenidas = " + dados.getGanancia() + "\n");
+                console.log("Apuesta realizada = " + apuesta + "\n" + "Ganancias obtenidas = " + dados.getCreditoActual + "\n");
                 //Se almacena las ganancias obtenidas por el jugador durante la partida para almacenarlo posteriormente en su historial de apuestas.
-                ganancia = dados.getGanancia();
+                ganancia = dados.getCreditoActual();
                 //en base a la ganancia obtenida se actualiza el saldo del jugador y del casino
                 casino.actualizarSaldo(jugador1, casino, apuesta, ganancia);
                 //Se informan los resultados finales de la partida, la apuesta realizada por el jugador y su saldo actual.
-                console.log("Apuesta realizada = " + apuesta + "\n" + "Ganancias obtenidas = " + dados.getGanancia() + "\n" + "Saldo actual del jugador = " + jugador1.getSaldo());
+                console.log("Apuesta realizada = " + apuesta + "\n" + "Ganancias obtenidas = " + dados.getCreditoActual() + "\n" + "Saldo actual del jugador = " + jugador1.getSaldo());
                 //Se carga el resultado de la partida en el historial de partidas
                 HistorialDePartidas.registrarPartida(jugador1.getNombreJugador(), juegoSeleccionado.getNombre(), apuesta, ganancia, jugador1.getSaldo());
                 break;
@@ -171,7 +171,7 @@ function iniciarJuego(casino: Casino, juegoIndex: number, jugador1: Jugador): vo
                 //Se da inicio a la ruleta y se evaluan los resultados
                 ruleta.jugar();
                 //Se almacena las ganancias obtenidas por el jugador durante la partida para almacenarlo posteriormente en su historial de apuestas.
-                ganancia = ruleta.getGanancia();
+                ganancia = ruleta.getCreditoActual();
                 if (ganancia === 0) {
                     ganancia = apuesta * (-1);
                 }
@@ -179,7 +179,7 @@ function iniciarJuego(casino: Casino, juegoIndex: number, jugador1: Jugador): vo
                 //en base a la ganancia obtenida se actualiza el saldo del jugador y del casino
                 casino.actualizarSaldo(jugador1, casino, apuesta, ganancia);
                 //Se imprime el resultado de la apuesta realizada.
-                console.log("Apuesta realizada = " + apuesta + "\n" + "Ganancias obtenidas = " + ruleta.getGanancia() + "\n" + "Saldo actual del jugador = " + jugador1.getSaldo());
+                console.log("Apuesta realizada = " + apuesta + "\n" + "Ganancias obtenidas = " + ruleta.getCreditoActual () + "\n" + "Saldo actual del jugador = " + jugador1.getSaldo());
                 //Se carga el resultado de la partida en el historial de partidas
                 HistorialDePartidas.registrarPartida(jugador1.getNombreJugador(), juegoSeleccionado.getNombre(), apuesta, ganancia, jugador1.getSaldo());
                 break;
